@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import SectionHeader from "./common/SectionHeader";
 import leftArrow from "../assets/img/left.png";
 import rightArrow from "../assets/img/right.png";
 
@@ -11,46 +12,46 @@ const Month = () => {
     {
       img: 'src/assets/img/coat.png',
       title: 'The north coat',
-      price: '$260',
-      oldPrice: '$360',
+      price: 'Rs. 72,800',
+      oldPrice: 'Rs. 100,800',
     },
     {
       img: 'src/assets/img/bag.png',
       title: 'Gucci duffle bag',
-      price: '$960',
-      oldPrice: '$1160',
+      price: 'Rs. 268,800',
+      oldPrice: 'Rs. 324,800',
     },
     {
       img: 'src/assets/img/cooler.png',
       title: 'RGB liquid CPU Cooler',
-      price: '$160',
-      oldPrice: '$170',
+      price: 'Rs. 44,800',
+      oldPrice: 'Rs. 47,600',
     },
     {
       img: 'src/assets/img/booksell.png',
       title: 'S-Series Comfort Chair',
-      price: '$360',
-      oldPrice: '$520',
+      price: 'Rs. 100,800',
+      oldPrice: 'Rs. 145,600',
     },
     {
       img: 'src/assets/img/coat.png',
       title: 'Another Coat',
-      price: '$299',
-      oldPrice: '$400',
+      price: 'Rs. 83,720',
+      oldPrice: 'Rs. 112,000',
     },
   ];
 
   return (
     <section className="mb-24 px-4 sm:px-6 md:px-20">
       <div>
-        <div className="flex items-center mt-12">
-          <div className="w-6 h-11 bg-[#DB4444] rounded-md" />
-          <h1 className="text-[#DB4444] ml-5 font-bold text-lg">This Month</h1>
-        </div>
+        <SectionHeader 
+          title="This Month" 
+          subtitle="Browse By Category"
+          className="mt-12"
+        />
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-5 gap-4">
-          <h1 className="font-semibold text-3xl sm:text-4xl">Browse By Category</h1>
-          <button className="text-white p-3 w-40 bg-[#DB4444] hover:bg-red-500">
+          <button className="text-white p-3 w-40 bg-primary hover:bg-primary-600 rounded-lg shadow-modern transition-all">
             View All
           </button>
         </div>
@@ -93,7 +94,7 @@ const Month = () => {
                 </div>
                 <h1 className="font-semibold pt-4">{product.title}</h1>
                 <div className="flex gap-4 mt-2">
-                  <span className="text-[#DB4444] font-semibold">{product.price}</span>
+                  <span className="text-primary font-semibold">{product.price}</span>
                   <span className="line-through text-gray-500">{product.oldPrice}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-3">

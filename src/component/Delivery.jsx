@@ -5,7 +5,7 @@ const Delivery = () => {
         <div className="text-center mb-8 md:mb-0">
           <img src="src/assets/img/fast-delivery.png" alt="" className="mx-auto" />
           <h1 className="mt-7 text-xl font-semibold">FREE AND FAST DELIVERY</h1>
-          <p className="pt-2">Free delivery for all orders over $140</p>
+          <p className="pt-2">Free delivery for all orders over Rs. 39,200</p>
         </div>
         <div className="text-center mb-8 md:mb-0">
           <img src="src/assets/img/services.png" alt="" className="mx-auto" />

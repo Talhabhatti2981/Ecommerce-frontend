@@ -1,12 +1,12 @@
 import Footer from "../Footer";
-import Home from "../home";
+import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
-import Homess from "./Homess";
+import SectionHeader from "../common/SectionHeader";
 
 const Wishlist = () => {
   return (
     <>
-      <Homess />
+      <Navbar />
       <section className="px-4 sm:px-6 md:px-10">
         <div>
           <div>
@@ -38,9 +38,9 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-4">Gucci duffle bag</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$960</span>
+                  <span className="text-primary font-medium">Rs. 268,800</span>
                   <span className="text-[#808080] font-medium line-through">
-                    $1160
+                    Rs. 324,800
                   </span>
                 </div>
               </div>
@@ -63,7 +63,7 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">RGB liquid CPU Cooler</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$1960</span>
+                  <span className="text-primary font-medium">Rs. 548,800</span>
                 </div>
               </div>
 
@@ -85,7 +85,7 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">GP11 Shooter USB Gamepad</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$550</span>
+                  <span className="text-primary font-medium">Rs. 154,000</span>
                 </div>
               </div>
 
@@ -107,17 +107,14 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">Quilted Satin Jacket</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$750</span>
+                  <span className="text-primary font-medium">Rs. 210,000</span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between mt-12 mb-10">
-              <div className="flex items-center">
-                <div className="w-6 h-11 bg-[#DB4444]  mt-10 rounded-md ml-10 mr-4" />
-                <h1 className="text-[#DB4444] font-bold text-lg  mt-10 ">
-                  Just For You
-                </h1>
+              <div className="mt-10 ml-10">
+                <SectionHeader title="Just For You" />
               </div>
               <button className="border border-[#808080] cursor-pointer  font-semibold py-3 lg:mr-10 px-10 mt-4 sm:mt-0 hover:bg-red-500 hover:text-white hover:border-red-500">
                 See All
@@ -143,9 +140,9 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">ASUS FHD Gaming Laptop</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$960</span>
+                  <span className="text-primary font-medium">Rs. 268,800</span>
                   <span className="text-[#808080] font-medium line-through">
-                    $1160
+                    Rs. 324,800
                   </span>
                 </div>
                 <div className="flex justify-center gap-2 mt-3">
@@ -196,7 +193,7 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">IPS LCD Gaming Monitor</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$1160</span>
+                  <span className="text-primary font-medium">Rs. 324,800</span>
                 </div>
                 <div className="flex justify-center gap-2 mt-3">
                   <img
@@ -246,7 +243,7 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">HAVIT HV-G92 Gamepad</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$560</span>
+                  <span className="text-primary font-medium">Rs. 156,800</span>
                 </div>
                 <div className="flex justify-center gap-2 mt-3">
                   <img
@@ -296,7 +293,7 @@ const Wishlist = () => {
 
                 <h1 className="font-medium mt-2">AK-900 Wired Keyboard</h1>
                 <div className="flex justify-center gap-3 mt-1">
-                  <span className="text-[#db4444] font-medium">$200</span>
+                  <span className="text-primary font-medium">Rs. 56,000</span>
                 </div>
                 <div className="flex justify-center gap-2 mt-3">
                   <img

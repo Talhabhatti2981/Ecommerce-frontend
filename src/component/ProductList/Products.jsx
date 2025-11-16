@@ -1,7 +1,8 @@
 import { useState } from "react";
-import Home from "../home";
+import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
+import SectionHeader from "../common/SectionHeader";
 
 const Products = () => {
   const [quantity, setQuantity] = useState(1);
@@ -16,7 +17,7 @@ const Products = () => {
 
   return (
     <>
-      <Home />
+      <Navbar />
       <section className="mb-40  px-4 md:px-10">
         <div className="m-4 md:m-8 flex flex-wrap gap-2 text-sm md:text-base">
           <Link to="/Account" className="text-[#808080]">
@@ -25,7 +26,7 @@ const Products = () => {
           <Link to="" className="text-[#808080]">
             Gaming /
           </Link>
-          <Link to="/" className="text-black">
+          <Link to="/home" className="text-black">
             Havic HV G-92 Gamepad
           </Link>
         </div>
@@ -64,7 +65,7 @@ const Products = () => {
             </div>
 
             <div className="text-xl md:text-2xl mt-5">
-              <span>$192.00</span>
+              <span className="text-primary font-semibold">Rs. 53,760</span>
             </div>
 
             <div className="mt-4 text-sm md:text-base">
@@ -94,7 +95,7 @@ const Products = () => {
                   {["XS", "S", "M", "L", "XL"].map((size) => (
                     <div
                       key={size}
-                      className="h-8 w-8 cursor-pointer text-center pt-[3px] border border-gray-600 rounded-sm hover:bg-[#DB4444] hover:text-white hover:border-red-600"
+                      className="h-8 w-8 cursor-pointer text-center pt-[3px] border border-gray-600 rounded-sm hover:bg-primary hover:text-white hover:border-primary transition-all"
                     >
                       {size}
                     </div>
@@ -106,24 +107,24 @@ const Products = () => {
                 <div className="flex items-center border-2 border-gray-800 rounded-md overflow-hidden">
                   <button
                     onClick={decreaseQty}
-                    className="px-4 py-2 text-lg font-semibold hover:bg-[#DB4444] hover:text-white transition"
+                    className="px-4 py-2 text-lg font-semibold hover:bg-primary hover:text-white transition rounded-l-md"
                   >
                     −
                   </button>
                   <span className="px-6 py-2 text-base font-medium">{quantity}</span>
                   <button
                     onClick={increaseQty}
-                    className="px-4 py-2 text-lg font-semibold hover:bg-[#DB4444] hover:text-white transition"
+                    className="px-4 py-2 text-lg font-semibold hover:bg-primary hover:text-white transition rounded-r-md"
                   >
                     +
                   </button>
                 </div>
 
-                <button className="px-6 py-3 cursor-pointer rounded-md border w-auto border-black font-semibold text-black hover:bg-[#DB4444] hover:text-white hover:border-[#DB4444] transition">
+                <button className="px-6 py-3 cursor-pointer rounded-lg border w-auto border-black font-semibold text-black hover:bg-primary hover:text-white hover:border-primary transition shadow-modern">
                   Buy Now
                 </button>
 
-                <div className="relative hover:bg-[#db4444] hover:text-white cursor-pointer hover:border-[#db4444]">
+                <div className="relative hover:bg-primary hover:text-white cursor-pointer hover:border-primary transition-all rounded-md">
                   <div className="h-12 w-12 border border-gray-500 rounded-md"></div>
                   <img
                     src="src/assets/img/heart.png"
@@ -162,38 +163,37 @@ const Products = () => {
         </div>
 
         <div>
-          <div className="flex items-center mt-32 mb-16">
-            <div className="w-6 h-11 bg-[#DB4444] rounded-md" />
-            <h1 className="text-[#DB4444] ml-5 font-bold text-lg">Related Item</h1>
+          <div className="mt-32 mb-16">
+            <SectionHeader title="Related Item" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {[
               {
                 img: "wish-img7.png",
                 title: "HAVIT HV-G92 Gamepad",
-                price: "$120",
-                old: "$160",
+                price: "Rs. 33,600",
+                old: "Rs. 44,800",
                 reviews: "(88)"
               },
               {
                 img: "wish-img8.png",
                 title: "AK-900 Wired Keyboard",
-                price: "$960",
-                old: "$1160",
+                price: "Rs. 268,800",
+                old: "Rs. 324,800",
                 reviews: "(75)"
               },
               {
                 img: "wish-img6.png",
                 title: "HAVIT HV-G92 Gamepad",
-                price: "$370",
-                old: "$400",
+                price: "Rs. 103,600",
+                old: "Rs. 112,000",
                 reviews: "(99)"
               },
               {
                 img: "wish-img3.png",
                 title: "RGB liquid CPU Cooler",
-                price: "$160",
-                old: "$170",
+                price: "Rs. 44,800",
+                old: "Rs. 47,600",
                 reviews: "(65)"
               }
             ].map(({ img, title, price, old, reviews }) => (
@@ -201,7 +201,7 @@ const Products = () => {
                 <img src={`src/assets/img/${img}`} alt="" />
                 <h1 className="mt-2 font-semibold">{title}</h1>
                 <div className="flex gap-4 mt-2">
-                  <span className="text-[#E26767] font-semibold">{price}</span>
+                  <span className="text-primary font-semibold">{price}</span>
                   <span className="line-through text-[#808080]">{old}</span>
                 </div>
                 <div className="flex items-center gap-1 mt-3">

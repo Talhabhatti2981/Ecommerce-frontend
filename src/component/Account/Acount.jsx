@@ -1,15 +1,15 @@
-import Home from "../home";
+import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
-import Homess from "../Wishlist/Homess";
+
 const Acount = () => {
   return (
     <>
-      <Homess />
+      <Navbar />
       <section className="mb-20 px-4 md:px-10 lg:px-20">
   <div className="mt-6 mb-8 text-sm">
-    <Link to="../" className="text-[#808080]">Home /</Link>
-    <Link to="" className="ml-2">My Account</Link>
+    <Link to="/home" className="text-[#808080]">Home /</Link>
+    <Link to="/Account" className="ml-2">My Account</Link>
   </div>
 
   <div className="flex flex-col lg:flex-row gap-10">
@@ -69,7 +69,7 @@ const Acount = () => {
         <button className="text-gray-600 hover:text-black">Cancel</button>
         <button
           type="submit"
-          className="bg-[#DB4444] text-white px-6 py-3 rounded-sm hover:bg-red-600 transition duration-200"
+          className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-600 transition duration-200 shadow-modern transform hover:scale-105"
         >
           Save Changes
         </button>

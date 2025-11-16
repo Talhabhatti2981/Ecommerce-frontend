@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 // Import images
 import qrCode from "../assets/img/Qr Code.png";
 import playstore from "../assets/img/playstore.png";
-import appleLogo from "../assets/img/apple-logo.png";
 
 const Footer = () => {
   return (
@@ -18,7 +17,7 @@ const Footer = () => {
     <footer className="bg-black mt-40 text-white">
       <div className="container mt- mx-auto flex flex-wrap justify-between p-10 gap-y-10">
         <div className="w-full  md:w-64">
-          <h2 className="text-2xl font-bold mt-10 ">Exclusive</h2>
+          <h2 className="text-2xl font-bold mt-10 ">Martiva</h2>
           <Link to="/">
             <p className="text-lg mt-4 mb-2">Subscribe</p>
           </Link>
@@ -36,32 +35,32 @@ const Footer = () => {
         <div className="w-full md:w-auto mt-10">
           <h2 className="text-lg font-bold">Support</h2>
           <p className="text-md pt-6">
-            111 Bijoy Sarani, Dhaka, <br /> DH 1515, Bangladesh.
+            ------------------, <br /> -------, Pakistan.
           </p>
           <Link to="/">
-            <p className="text-md pt-4">exclusive@gmail.com</p>
+            <p className="text-md pt-4">martiva@gmail.com</p>
           </Link>
           <Link to="/">
-            <p className="text-md pt-5">+88015-88888-9999</p>
+            <p className="text-md pt-5">000000000000000</p>
           </Link>
         </div>
  
         <div className="w-full md:w-auto mt-10">
           <h2 className="text-lg font-bold">Account</h2>
           <ul className="text-sm space-y-7 pt-7">
-            <Link to= "/">
+            <Link to="/Account">
               <li>My Account</li>
             </Link>
-            <Link to= "/">
+            <Link to="/">
               <li className="pt-7">Login / Register</li>
             </Link>
-            <Link to= "/">
+            <Link to="/cart">
               <li className="pt-7">Cart</li>
             </Link>
-            <Link to= "/">
+            <Link to="/wishlist">
               <li className="pt-7">Wishlist</li>
             </Link>
-            <Link to= "/">
+            <Link to="/home">
               <li className="pt-7">Shop</li>
             </Link>
           </ul>
@@ -70,16 +69,16 @@ const Footer = () => {
         <div className="w-full md:w-auto mt-10">
           <h2 className="text-lg font-bold">Quick Link</h2>
           <ul className="text-sm space-y-7 mt-8">
-            <Link to= "/">
+            <Link to="/">
               <li>Privacy Policy</li>
             </Link>
-            <Link to= "/">
+            <Link to="/">
               <li className="pt-7">Terms Of Use</li>
             </Link>
-            <Link to= "/">
+            <Link to="/">
               <li className="pt-7">FAQ</li>
             </Link>
-            <Link to= "/">
+            <Link to="/contact">
               <li className="pt-7">Contact</li>
             </Link>
           </ul>
@@ -87,9 +86,9 @@ const Footer = () => {
 
         <div className="w-full md:w-auto mt-10">
           <h2 className="text-lg font-bold">Download App</h2>
-          <p className="text-[#7D7D7D] pt-8">Save $3 with App New User Only</p>
+          <p className="text-[#7D7D7D] pt-8">Save Rs. 840 with App New User Only</p>
           <div className="flex gap-3">
-            <img src={qrCode} alt="QR Code" className="pt-2 max-w-full mx-auto md:mx-0" />
+            {/* <img src={qrCode} alt="QR Code" className="pt-2 max-w-full mx-auto md:mx-0" /> */}
             <div>
               <div className="border border-white h-[38px] mt-2 rounded-sm">
                 <div className="flex items-center gap-2 bg-black text-white px-3 py-1 rounded w-fit">
@@ -105,7 +104,7 @@ const Footer = () => {
                 </div>
               </div>
 
-              <div className="border border-white h-[38px] mt-3 rounded-sm">
+              {/* <div className="border border-white h-[38px] mt-3 rounded-sm">
                 <div className="flex items-center gap-2 bg-black text-white px-3 py-1 rounded w-fit">
                   <img
                     src={appleLogo}
@@ -117,7 +116,7 @@ const Footer = () => {
                     <span className="text-sm font-semibold -mt-0.5">App Store</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="mt-5 flex gap-4 justify-center md:justify-start">
@@ -136,8 +135,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-700 text-center pt-7 pb-4 text-sm text-[#353535]">
-        Copyright © 2023, All Rights Reserved
+      <div className="border-t border-gray-700 text-center pt-7 pb-4 text-sm text-[#e7e5e5]">
+        Copyright © 2025, All Rights Reserved
       </div>
     </footer>
     </>

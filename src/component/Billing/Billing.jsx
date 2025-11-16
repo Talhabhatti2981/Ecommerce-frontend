@@ -1,11 +1,11 @@
-import Home from "../home";
+import Navbar from "../Navbar";
 import Footer from "../Footer";
 import { Link } from "react-router-dom";
-import Homess from "../Wishlist/Homess";
+
 const Billing = () => {
   return (
     <>
-      <Homess />
+      <Navbar />
       <section className="mt-20 px-4 md:px-20 mb-20">
   <div className="flex flex-wrap gap-2 text-sm">
     <Link to="" className="text-[#808080]">Account /</Link>
@@ -66,19 +66,19 @@ const Billing = () => {
         <img src="src/assets/img/cart-img2.png" alt="Product" className=" object-cover" />
         <div className="flex justify-between w-full">
           <h2 className="text-lg font-semibold">LCD Monitor</h2>
-          <p className="font-semibold">$650</p>
+          <p className="font-semibold">Rs. 182,000</p>
         </div>
       </div>
       <div className="flex items-center gap-4 mb-6">
         <img src="src/assets/img/cart-img1.png" alt="Product" className=" object-cover" />
         <div className="flex justify-between w-full">
           <h2 className="text-lg font-semibold">LCD Monitor</h2>
-          <p className="font-semibold">$1100</p>
+          <p className="font-semibold">Rs. 308,000</p>
         </div>
       </div>
       <div className="flex justify-between mt-6">
         <h1 className="text-lg font-semibold">Subtotal</h1>
-        <span className="font-semibold">$1750</span>
+        <span className="font-semibold">Rs. 490,000</span>
       </div>
       <div className="border-b border-gray-300 my-3"></div>
 
@@ -89,7 +89,7 @@ const Billing = () => {
       <div className="border-b border-gray-300 my-3"></div>
       <div className="flex justify-between">
         <h1 className="text-lg font-semibold">Total</h1>
-        <span className="font-semibold">$1750</span>
+        <span className="font-semibold text-primary text-lg">Rs. 490,000</span>
       </div>
       <div className="mt-6">
         <div className="flex items-center gap-2 mb-4">
@@ -107,17 +107,17 @@ const Billing = () => {
           <input type="radio" name="selection" className="w-5 h-5" />
           <span className="font-medium">Cash on delivery</span>
         </div>
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+        {/* <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
           <input
             type="text"
             placeholder="Coupon Code"
             className="border border-gray-700 px-3 py-3 w-full md:w-80 focus:outline-none"
           />
-          <button className="py-[13px] px-11 rounded-sm font-semibold bg-[#DB4444] text-white hover:bg-red-500 w-full md:w-auto">
+          <button className="py-[13px] px-11 rounded-lg font-semibold bg-primary text-white hover:bg-primary-600 w-full md:w-auto shadow-modern transition-all">
             Apply Coupon
           </button>
-        </div>
-        <button className="py-[13px] px-11 mt-6 w-full rounded-sm font-semibold bg-[#DB4444] text-white hover:bg-red-500">
+        </div> */}
+        <button className="py-[13px] px-11 mt-6 w-full rounded-lg font-semibold bg-primary text-white hover:bg-primary-600 shadow-modern transition-all transform hover:scale-105">
           Place Order
         </button>
       </div>

@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import SectionHeader from "./common/SectionHeader";
 
 const categories = [
   { img: "src/assets/img/phone.png", title: "Phones" },
@@ -20,11 +21,7 @@ const Category = () => {
   return (
     <section className="mb-24 shadow-md py-12 px-4 sm:px-6 md:px-20">
       <div>
-        <div className="flex items-center">
-          <div className="w-6 h-11 bg-[#DB4444] rounded-md" />
-          <h1 className="text-[#DB4444] ml-5 font-bold text-lg">Category</h1>
-        </div>
-        <h1 className="font-semibold mt-6 text-3xl sm:text-4xl">Browse By Category</h1>
+        <SectionHeader title="Category" subtitle="Browse By Category" />
         <div className="flex justify-end mt-6 gap-2">
           <img
             src={leftArrow}
@@ -57,7 +54,7 @@ const Category = () => {
         >
           {categories.map((category, index) => (
             <SwiperSlide key={index}>
-              <div className="border border-gray-300 w-full h-36 flex flex-col items-center justify-start p-4 group hover:bg-[#DB4444] cursor-pointer transition duration-300">
+              <div className="border border-gray-300 w-full h-36 flex flex-col items-center justify-start p-4 group hover:bg-primary cursor-pointer transition duration-300 rounded-lg shadow-modern hover:shadow-modern-lg">
                 <img
                   src={category.img}
                   alt={category.title}

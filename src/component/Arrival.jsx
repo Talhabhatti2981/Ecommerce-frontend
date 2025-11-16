@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
+import SectionHeader from "./common/SectionHeader";
+
 const Arrival = () => {
   return (
     <section className="mb-60 ">
       <div className="overflow-hidden">
-        <div className="flex items-center ml-4 md:ml-20 mt-8 md:mt-12  ">
-          <div className="w-6 h-11 bg-[#DB4444] rounded-md " />
-          <h1 className="text-[#DB4444] ml-3 md:ml-5 font-bold text-lg">Featured</h1>
-        </div>
-        <div className="flex justify-between">
-          <h1 className="font-semibold  ml-4 md:ml-20 mt-4 md:mt-5 text-2xl md:text-4xl">New Arrival</h1>
+        <div className="ml-4 md:ml-20 mt-8 md:mt-12">
+          <SectionHeader 
+            title="Featured" 
+            subtitle="New Arrival"
+            className="flex items-center"
+          />
         </div>
         <div className="flex flex-col md:flex-row gap-10 m-2 md:ml-20">
           <div className="relative mt-[68px] w-full md:w-[555px] h-[555px]">

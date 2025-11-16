@@ -1,59 +1,60 @@
 import { Link } from "react-router-dom";
+import SectionHeader from "./common/SectionHeader";
 
 const Product = () => {
   const products = [
     {
       title: "Breed Dry Dog Food",
-      price: "$100",
+      price: "Rs. 28,000",
       image: "src/assets/img/dog-food.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "CANON EOS DSLR Camera",
-      price: "$360",
+      price: "Rs. 100,800",
       image: "src/assets/img/dslr.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "ASUS FHD Gaming Laptop",
-      price: "$700",
+      price: "Rs. 196,000",
       image: "src/assets/img/laptop.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "Curology Product Set",
-      price: "$500",
+      price: "Rs. 140,000",
       image: "src/assets/img/facewash.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "Kids Electric Car",
-      price: "$960",
+      price: "Rs. 268,800",
       image: "src/assets/img/electric-car.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "Jr. Zoom Soccer Cleats",
-      price: "$1160",
+      price: "Rs. 324,800",
       image: "src/assets/img/shoes.png",
       rating: 5,
       reviews: 65,
     },
     {
       title: "GP11 Shooter USB Gamepad",
-      price: "$660",
+      price: "Rs. 184,800",
       image: "src/assets/img/game-usb.png",
       rating: 5,
       reviews: 55,
     },
     {
       title: "Quilted Satin Jacket",
-      price: "$660",
+      price: "Rs. 184,800",
       image: "src/assets/img/jacket.png",
       rating: 5,
       reviews: 55,
@@ -63,18 +64,11 @@ const Product = () => {
   return (
     <section className="mb-24 py-10 px-4 sm:px-6 lg:px-20">
       <div>
-        <div className="flex items-center mt-12">
-          <div className="w-6 h-11 bg-[#DB4444] rounded-md" />
-          <h1 className="text-[#DB4444] ml-5 font-bold text-lg">
-            Our Products
-          </h1>
-        </div>
-
-        <div className="mt-6">
-          <h1 className="font-medium text-2xl sm:text-3xl lg:text-4xl">
-            Explore Our Products
-          </h1>
-        </div>
+        <SectionHeader 
+          title="Our Products" 
+          subtitle="Explore Our Products" 
+          className="mt-12"
+        />
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((item, index) => (
@@ -94,7 +88,7 @@ const Product = () => {
               </div>
               <h1 className="font-semibold pt-4">{item.title}</h1>
               <div className="flex items-center gap-2 mt-3">
-                <span className="text-[#DB4444] font-semibold">
+                <span className="text-primary font-semibold">
                   {item.price}
                 </span>
                 {Array.from({ length: item.rating }).map((_, i) => (
@@ -122,7 +116,7 @@ const Product = () => {
         </div>
 
         <div className="mt-14 flex justify-center">
-          <button className="text-white px-8 py-3 cursor-pointer bg-[#DB4444] hover:bg-red-500">
+          <button className="text-white px-8 py-3 cursor-pointer bg-primary hover:bg-primary-600 rounded-lg shadow-modern transition-all transform hover:scale-105">
             View All Products
           </button>
         </div>

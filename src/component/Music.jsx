@@ -37,7 +37,7 @@ const Music = () => {
             alt="Music Frame"
             className="w-full h-full object-cover rounded-md"
           />
-          <h1 className="absolute top-6 left-4 sm:top-10 sm:left-16 text-[#00AF46] font-semibold text-sm sm:text-base">
+          <h1 className="absolute top-6 left-4 sm:top-10 sm:left-16 text-success font-semibold text-sm sm:text-base">
             Categories
           </h1>
 
@@ -66,7 +66,7 @@ const Music = () => {
 
 
           <div className="absolute top-[300px] sm:top-[360px] left-4 sm:left-20">
-          <button className="bg-[#00FF66] hover:bg-green-400 text-white font-medium mt-20 sm:mt-0 px-8 sm:px-10 py-3 h-12 sm:h-14 rounded-sm cursor-pointer text-sm sm:text-base">
+          <button className="bg-success hover:bg-success/90 text-white font-medium mt-20 sm:mt-0 px-8 sm:px-10 py-3 h-12 sm:h-14 rounded-lg cursor-pointer text-sm sm:text-base shadow-modern transform hover:scale-105 transition-all">
   Buy Now!
 </button>
 
