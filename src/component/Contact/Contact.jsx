@@ -1,46 +1,56 @@
-import Navbar from "../Navbar";
+// React Router
+import { Link } from "react-router-dom";
+
+// Components
+import Home from "../home";
+import Footer from "../Footer";
+
+// Icons
 import { FiPhone } from "react-icons/fi";
 import { IoMailOutline } from "react-icons/io5";
-import Footer from "../Footer";
-import { Link } from "react-router-dom";
 
 const Contact = () => {
   return (
     <>
-      <Navbar />
 
       <section className="mb-20 mt-20 px-6 md:px-20">
+        {/* Breadcrumb */}
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <ul>
-            <Link to="/home" className="text-[#808080]">Home</Link>
+            <Link to="../" className="text-[#808080]">Home</Link>
           </ul>
           /
-          <Link to="/contact">Contact</Link>
+          <Link to="./">Contact</Link>
         </div>
+
+        {/* Contact Section */}
         <div className="flex flex-col lg:flex-row gap-12 mt-20 w-full">
+
+          {/* Contact Info */}
           <div className="flex-0 h-116 py-5 px-6 md:px-13 shadow-lg w-full lg:max-w-md">
+            {/* Phone Section */}
             <div className="flex items-center gap-5 mb-4">
-              <div className="rounded-full w-12 h-12 bg-primary flex items-center justify-center shadow-modern">
+              <div className="rounded-full w-12 h-12 bg-[#DB4444] flex items-center justify-center">
                 <FiPhone className="text-white cursor-pointer text-xl" />
               </div>
               <h1 className="text-xl font-semibold">Call To Us</h1>
             </div>
 
-            <p className="text-lg w-full mb-2">
+            <p className="text-lg mb-2">
               We are available 24/7, 7 days a week.
             </p>
-
             <p className="text-md mb-6 pt-5">
               Phone:{" "}
               <a href="tel:+8801611112222" className="hover:underline">
-                +8801611112222
+                +000000000000000
               </a>
             </p>
 
-<div className="border-b border-gray-400 w-[300px] mb-10 hidden sm:block"></div>
+            <div className="border-b border-gray-400 w-[300px] mb-10 hidden sm:block"></div>
 
+            {/* Email Section */}
             <div className="flex items-center gap-5 mb-4">
-              <div className="rounded-full w-12 h-12 bg-primary flex items-center justify-center shadow-modern">
+              <div className="rounded-full w-12 h-12 bg-[#DB4444] flex items-center justify-center">
                 <IoMailOutline className="text-white text-xl cursor-pointer" />
               </div>
               <h1 className="text-xl font-semibold">Write To Us</h1>
@@ -52,20 +62,21 @@ const Contact = () => {
 
             <p className="text-md">
               Email:
-              <a href="mailto:customer@exclusive.com" className="hover:underline">
-                customer@exclusive.com
+              <a href="mailto:customer@martiva.com" className="hover:underline">
+                customer@martiva.com
               </a>
             </p>
 
             <p className="text-md mt-2">
               Email:
-              <a href="mailto:support@exclusive.com" className="hover:underline">
-                support@exclusive.com
+              <a href="mailto:support@martiva.com" className="hover:underline">
+                support@martiva.com
               </a>
             </p>
           </div>
 
-          <div className="w-full  ">
+          {/* Contact Form */}
+          <div className="w-full">
             <div className="shadow-md rounded-md p-6 h-116 bg-white w-full">
               <form className="flex flex-col lg:flex-row flex-wrap gap-4 w-full mt-7">
                 <input
@@ -93,7 +104,7 @@ const Contact = () => {
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"
-                  className="bg-primary text-white w-55 h-12 px-8 rounded-lg cursor-pointer hover:bg-primary-600 transition duration-200 shadow-modern transform hover:scale-105"
+                  className="bg-[#DB4444] text-white w-55 h-12 px-8 rounded-sm cursor-pointer hover:bg-red-600 transition duration-200"
                 >
                   Submit
                 </button>
