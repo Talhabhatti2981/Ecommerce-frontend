@@ -80,8 +80,8 @@ const SignUp = () => {
         }
       } else {
         setMessageType("success");
-        setMessage("Account created successfully! Please check your email to verify your account.");
-        setTimeout(() => navigate("/"), 3000);
+        setMessage("Account created successfully! Please check your email to verify your account. After verification, you can log in.");
+        setTimeout(() => navigate("/login"), 4000);
       }
     } catch (error) {
       setMessageType("error");
@@ -311,7 +311,7 @@ const SignUp = () => {
         <p className="text-center text-gray-600">
           Already have an account?{" "}
           <Link
-            to="/"
+            to="/login"
             className="text-red-600 hover:text-red-700 font-semibold hover:underline"
           >
             Log in

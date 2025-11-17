@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { supabase } from "./supabaseClient";
 import {
   FaBars,
   FaTimes,
@@ -14,15 +15,40 @@ import MobileBottomNav from "./MobileBottomNav";
 const Navbar = ({ searchQuery, setSearchQuery }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  useEffect(() => {
+    // Check current user
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/login");
+    setIsProfileOpen(false);
+  };
+
   // Navbar is now shown on / and /home
-  const hideNavbarRoutes = ["/Account"];
+  const hideNavbarRoutes = ["/Account", "/login", "/signup"];
   if (hideNavbarRoutes.includes(location.pathname)) return null;
 
   const navLinks = [
-    { label: "Home", path: "/" },          // Changed /home to /
+    { label: "Home", path: "/home" },
     { label: "About", path: "/about" },
     { label: "Contact", path: "/contact" },
   ];
@@ -38,7 +64,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
       <nav className="bg-white border-b border-gray-200 shadow-sm fixed w-full top-0 z-50">
         <div className="px-4 md:px-10 lg:px-20 py-4 flex items-center justify-between">
           <Link
-            to="/"
+            to="/home"
             className="text-2xl font-bold text-primary hover:text-primary-600 transition duration-300"
           >
             Martiva
@@ -115,7 +141,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
                     <FaUser className="inline mr-2" /> My Account
                   </Link>
                   <button
-                    onClick={() => handleNavigation("/login")}
+                    onClick={handleLogout}
                     className="w-full px-4 py-3 text-left hover:bg-gray-100 border-t hover:text-primary"
                   >
                     <FaSignOutAlt className="inline mr-2" /> Logout

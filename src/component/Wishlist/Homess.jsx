@@ -51,7 +51,7 @@ const Homess = () => {
             isMenuOpen ? 'block' : 'hidden'
           } w-full sm:flex sm:w-auto gap-4 sm:gap-12 text-center mt-4 sm:mt-0`}
         >
-          <li><Link to="/" className="underline font-semibold block py-1">Home</Link></li>
+          <li><Link to="/home" className="underline font-semibold block py-1">Home</Link></li>
           <li><Link to="/contact" className="block py-1">Contact</Link></li>
           <li><Link to="/about" className="block py-1">About Us</Link></li>
           <li><Link to="/signup" className="block py-1">Sign up</Link></li>

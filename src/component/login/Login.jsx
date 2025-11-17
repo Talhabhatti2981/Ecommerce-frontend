@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout";
@@ -14,17 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [messageType, setMessageType] = useState("error"); // 'error' or 'success'
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        if (data?.session) navigate("/home");
-      } catch (error) {
-        console.error("Session check error:", error);
-      }
-    };
-    checkSession();
-  }, [navigate]);
+  // Auth check is handled in App.jsx, no need to check here
 
   const handleLogin = async (e) => {
     e.preventDefault();
