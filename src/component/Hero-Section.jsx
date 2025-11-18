@@ -10,7 +10,12 @@ const Hero = () => {
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
-    navigate(`/search?q=${encodeURIComponent(category)}`);
+    // Navigate to women's clothes page if Women's Fashion is clicked
+    if (category === "Women's Fashion") {
+      navigate('/women-clothes');
+    } else {
+      navigate(`/search?q=${encodeURIComponent(category)}`);
+    }
   };
 
   return (

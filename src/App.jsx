@@ -14,6 +14,7 @@ import Contact from './component/Contact/Contact';
 import Billing from './component/Billing/Billing';
 import Account from './component/Account/Acount';
 import Wishlist from './component/Wishlist/Wishlist';
+import WomenClothes from './component/WomenClothes/WomenClothes';
 import ScrollToTopButton from "./component/Arrow";
 import ProtectedRoute from './component/common/ProtectedRoute';
 
@@ -174,6 +175,11 @@ function AppContent() {
           <Route path="/Wishlist" element={
             <ProtectedRoute>
               <Wishlist />
+            </ProtectedRoute>
+          } />
+          <Route path="/women-clothes" element={
+            <ProtectedRoute>
+              <WomenClothes />
             </ProtectedRoute>
           } />
           <Route path="/ScrollToTopButton" element={
