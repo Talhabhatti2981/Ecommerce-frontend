@@ -7,7 +7,6 @@ import ScrollToTopButton from "./Arrow";
 import { Link } from "react-router-dom";
 
 // Import images
-import qrCode from "../assets/img/Qr Code.png";
 import playstore from "../assets/img/playstore.png";
 
 const Footer = () => {

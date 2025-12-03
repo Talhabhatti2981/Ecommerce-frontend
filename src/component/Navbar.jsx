@@ -7,7 +7,6 @@ import {
   FaSearch,
   FaUser,
   FaSignOutAlt,
-  FaRegHeart,
 } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import MobileBottomNav from "./MobileBottomNav";
@@ -113,11 +112,6 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
               </button>
             </form>
 
-            <Link to="/Wishlist" className="relative text-gray-700 hover:text-primary">
-              <FaRegHeart className="h-6 w-6" />
-              <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-            </Link>
-
             <Link to="/cart" className="relative text-gray-700 hover:text-primary">
               <IoCartOutline className="h-6 w-6" />
               <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
@@ -139,6 +133,20 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
                     className="block px-4 py-3 hover:bg-gray-100 hover:text-primary"
                   >
                     <FaUser className="inline mr-2" /> My Account
+                  </Link>
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="block px-4 py-3 hover:bg-gray-100 border-t hover:text-primary"
+                  >
+                    Admin Dashboard
+                  </Link>
+                  <Link
+                    to="/seller"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="block px-4 py-3 hover:bg-gray-100 border-t hover:text-primary"
+                  >
+                    Seller Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
@@ -203,13 +211,6 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
             </ul>
 
             <div className="p-4 border-t flex flex-col gap-4 text-gray-700">
-              <Link
-                to="/Wishlist"
-                className="flex items-center gap-2 hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FaRegHeart /> Wishlist
-              </Link>
               <Link
                 to="/cart"
                 className="flex items-center gap-2 hover:text-primary"

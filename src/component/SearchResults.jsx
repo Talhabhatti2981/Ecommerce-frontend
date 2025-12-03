@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import Footer from "./Footer";
 import SectionHeader from "./common/SectionHeader";
 
 // Combined products from all sources
@@ -213,7 +212,6 @@ const SearchResults = () => {
           </div>
         )}
       </section>
-      <Footer />
     </>
   );
 };

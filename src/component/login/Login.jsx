@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout";
 import { HiMail, HiLockClosed, HiEye, HiEyeOff } from "react-icons/hi";
 import { FcGoogle } from "react-icons/fc";
+import { setToken } from "../../utils/api"; // Import setToken
+import api from "../../utils/api"; // Import api for backend login
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,9 +42,43 @@ const Login = () => {
           setMessage(error.message);
         }
       } else {
-        setMessageType("success");
-        setMessage("Login successful! Redirecting...");
-        setTimeout(() => navigate("/home"), 500);
+        // After successful Supabase login, get backend JWT token
+        try {
+          // First try to login to backend with same credentials
+          const backendResponse = await api.auth.login(email.trim(), password);
+          if (backendResponse.success && backendResponse.data?.token) {
+            // Backend token is already set by api.auth.login
+            setMessageType("success");
+            setMessage("Login successful! Redirecting...");
+            setTimeout(() => navigate("/home"), 500);
+          } else {
+            throw new Error("Backend login failed");
+          }
+        } catch (backendError) {
+          // If backend login fails (user doesn't exist), try to register user in backend
+          console.log("Backend login failed, trying to register user...");
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            const registerResponse = await api.auth.register({
+              email: email.trim(),
+              password: password,
+              name: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'
+            });
+            if (registerResponse.success && registerResponse.data?.token) {
+              // Backend token is already set by api.auth.register
+              setMessageType("success");
+              setMessage("Login successful! Redirecting...");
+              setTimeout(() => navigate("/home"), 500);
+            } else {
+              throw new Error("Backend registration failed");
+            }
+          } catch (registerError) {
+            console.error("Backend registration error:", registerError);
+            setMessageType("error");
+            setMessage("Login successful but backend sync failed. Please try again or contact support.");
+            // Don't navigate - let user see the error
+          }
+        }
       }
     } catch (error) {
       setMessageType("error");
@@ -59,15 +95,19 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/home`,
         },
       });
+
       if (error) {
         setMessageType("error");
         setMessage("Google login failed. Please try again.");
+      } else if (data?.session?.access_token) {
+        setToken(data.session.access_token);
+        // No need to navigate here, Supabase redirects automatically after OAuth
       }
     } catch (error) {
       setMessageType("error");

@@ -1,10 +1,39 @@
 // API configuration and utility functions for backend communication
+import { supabase } from '../component/supabaseClient';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Get auth token from localStorage
-const getToken = () => {
-  return localStorage.getItem('token');
+// Validate if token is a backend JWT token (not Supabase token)
+const isValidBackendToken = (token) => {
+  if (!token) return false;
+  // Backend JWT tokens are typically 150-250 chars
+  // Supabase tokens are 400+ chars
+  if (token.length > 300) {
+    return false; // Likely a Supabase token
+  }
+  // JWT tokens have 3 parts separated by dots
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    return false; // Not a valid JWT format
+  }
+  return true;
+};
+
+// Get auth token from localStorage (backend JWT token only)
+const getToken = async () => {
+  // Use backend JWT token from localStorage
+  const token = localStorage.getItem('token');
+  if (token) {
+    if (!isValidBackendToken(token)) {
+      // Invalid token - clear it
+      console.warn('Invalid token detected (likely Supabase token), clearing...');
+      localStorage.removeItem('token');
+      return null;
+    }
+    return token;
+  }
+  
+  return null;
 };
 
 // Set auth token in localStorage
@@ -19,7 +48,7 @@ export const removeToken = () => {
 
 // Generic fetch function with auth headers
 const apiFetch = async (endpoint, options = {}) => {
-  const token = getToken();
+  const token = await getToken();
   
   const defaultHeaders = {
     'Content-Type': 'application/json',
@@ -84,6 +113,16 @@ export const api = {
 
     getProfile: async () => {
       return apiFetch('/auth/profile');
+    },
+  },
+
+  // Category endpoints
+  categories: {
+    getAll: async () => {
+      return apiFetch('/categories');
+    },
+    getSlides: async () => {
+      return apiFetch('/categories/slides');
     },
   },
 
@@ -213,7 +252,15 @@ export const api = {
   health: async () => {
     return apiFetch('/health');
   },
+
+  // Utility functions
+  utils: {
+    getToken: getToken,
+  },
 };
+
+// Export getToken for direct use
+export { getToken };
 
 export default api;
 

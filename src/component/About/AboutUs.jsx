@@ -1,7 +1,6 @@
 import Sale from "./Sale";
 import Team from "./Team";
 import Delivery from "../Delivery";
-import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 
@@ -57,7 +56,6 @@ const AboutUs = () => {
       <Sale />
       <Team />
       <Delivery />
-      <Footer />
     </>
   );
 };
