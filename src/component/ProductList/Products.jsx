@@ -1,12 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../Navbar";
-import { Link } from "react-router-dom";
-import Footer from "../Footer";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import SectionHeader from "../common/SectionHeader";
+import api from "../../utils/api"; // Ensure api utility is imported
+import { supabase } from "../supabaseClient";
 
 const Products = () => {
-  const [quantity, setQuantity] = useState(1);
+  const { categoryName } = useParams();
+  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [addingToCart, setAddingToCart] = useState({}); // State to track loading for each product
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success"); // 'success' or 'error'
+  const [quantity, setQuantity] = useState(1); // Keep for product detail page, if implemented separately
+  const [selectedProduct, setSelectedProduct] = useState(null); // For product details modal
+  const [selectedSize, setSelectedSize] = useState(null); // Selected size
+  const [selectedColor, setSelectedColor] = useState(null); // Selected color
 
+  useEffect(() => {
+    const fetchProductsByCategory = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.products.getAll({ category: categoryName });
+        setProducts(response.data || []);
+      } catch (err) {
+        console.error("Error fetching products by category:", err);
+        setError("Could not load products for this category. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (categoryName) {
+      fetchProductsByCategory();
+    } else {
+      // Handle case where no category is specified (e.g., /products route)
+      // You might want to fetch all products here or redirect.
+      // For now, setting to empty and not loading.
+      setProducts([]);
+      setLoading(false);
+    }
+  }, [categoryName]);
+
+  // Reset size and color when product changes
+  useEffect(() => {
+    if (selectedProduct) {
+      setSelectedSize(null);
+      setSelectedColor(null);
+    }
+  }, [selectedProduct]);
+
+  // Check and sync backend token on mount
+  useEffect(() => {
+    const syncBackendToken = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session && session.user) {
+            // User is logged in via Supabase but no backend token
+            // This means they need to login again to sync
+            console.warn('Supabase session exists but no backend token. User should login again.');
+          }
+        } catch (error) {
+          console.error('Error checking Supabase session:', error);
+        }
+      }
+    };
+    syncBackendToken();
+  }, []);
+
+  // Remaining functions like increaseQty, decreaseQty will be useful for product detail page
+  // For product listing, typically you add entire product to cart, not adjust quantity here.
+  // This will be refactored when integrating add to cart for product cards.
   const increaseQty = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -15,207 +85,340 @@ const Products = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   };
 
+  const handleAddToCart = async (productId) => {
+    try {
+      // Get and validate backend token
+      // Use the getToken function from api utility which validates token format
+      const token = localStorage.getItem('token');
+      
+      // Validate token - if it's too long, it's likely a Supabase token
+      if (token && token.length > 300) {
+        // Clear invalid Supabase token
+        localStorage.removeItem('token');
+        setToastMessage("Invalid token detected. Please logout and login again.");
+        setToastType("error");
+        setShowToast(true);
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+        return;
+      }
+      
+      if (!token) {
+        // Check if Supabase session exists
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          setToastMessage("Please login to add items to cart");
+          setToastType("error");
+          setShowToast(true);
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
+          return;
+        } else {
+          // User is logged in via Supabase but no backend token
+          // Try to get backend token by calling login with Supabase user info
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            // We can't get password, so we need user to login again
+          } catch (error) {
+            console.error('Error getting user:', error);
+          }
+          setToastMessage("Please logout and login again to sync your session");
+          setToastType("error");
+          setShowToast(true);
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+          return;
+        }
+      }
+      
+      setAddingToCart((prev) => ({ ...prev, [productId]: true }));
+      await api.cart.add(productId, 1);
+      
+      // Close modal if open
+      setSelectedProduct(null);
+      setSelectedSize(null);
+      setSelectedColor(null);
+      
+      // Redirect to checkout immediately after successful add
+      navigate('/Billing', { replace: true });
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      const errorMessage = err.message || "Failed to add product to cart.";
+      if (errorMessage.includes('Authentication') || errorMessage.includes('token') || errorMessage.includes('Access token')) {
+        setToastMessage("Please login to add items to cart");
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setToastMessage(errorMessage);
+      }
+      setToastType("error");
+      setShowToast(true);
+    } finally {
+      setAddingToCart((prev) => ({ ...prev, [productId]: false }));
+      setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+    }
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <section className="mb-40 px-4 md:px-10">
+          <div className="flex justify-center items-center h-64 mt-20">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading products for {decodeURIComponent(categoryName || 'all categories')}...</p>
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <section className="mb-40 px-4 md:px-10">
+          <div className="text-center py-16 mt-20">
+            <p className="text-red-500 text-lg">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark"
+            >
+              Try Again
+            </button>
+          </div>
+        </section>
+      </>
+    );
+  }
+
   return (
     <>
       <Navbar />
-      <section className="mb-40  px-4 md:px-10">
+      <section className="mb-40 px-4 md:px-10">
         <div className="m-4 md:m-8 flex flex-wrap gap-2 text-sm md:text-base">
-          <Link to="/Account" className="text-[#808080]">
-            Account /
+          <Link to="/home" className="text-[#808080]">
+            Home /
           </Link>
-          <Link to="" className="text-[#808080]">
-            Gaming /
-          </Link>
-          <Link to="/home" className="text-black">
-            Havic HV G-92 Gamepad
-          </Link>
+          <span className="text-black">
+            {decodeURIComponent(categoryName || 'All Products')}
+          </span>
         </div>
 
-        <div className="flex flex-col lg:flex-row justify-evenly space-y-10 lg:space-y-0 lg:space-x-5">
-         <div className="grid grid-cols-2 gap-4 lg:grid-cols-1 lg:gap-0 justify-items-center">
-  <img src="src/assets/img/list1.png" alt="" className="h-[142px] object-contain" />
-  <img src="src/assets/img/list2.png" alt="" className="h-[142px] object-contain" />
-  <img src="src/assets/img/list3.png" alt="" className="h-[142px] object-contain" />
-  <img src="src/assets/img/list4.png" alt="" className="h-[145px] object-contain" />
-</div>
-
-
-          <div className="flex justify-center">
-            <img
-              src="src/assets/img/product-list.png"
-              alt=""
-              className="h-[400px] md:h-[500px] lg:h-[635px] object-contain"
-            />
-          </div>
-
-          <div className="max-w-xl">
-            <h1 className="font-semibold text-xl md:text-2xl lg:text-[25px]">Havic HV G-92 Gamepad</h1>
-
-            <div className="flex items-center flex-wrap gap-2 mt-5">
-              <div className="flex gap-1">
-                <img src="src/assets/img/star.png" alt="" />
-                <img src="src/assets/img/star.png" alt="" />
-                <img src="src/assets/img/star.png" alt="" />
-                <img src="src/assets/img/star.png" alt="" />
-                <img src="src/assets/img/e-star.png" alt="" />
-              </div>
-              <span className="text-[#909090] text-sm">(150 Reviews)</span>
-              <span className="text-[#909090] text-sm">|</span>
-              <span className="text-[#B2FFD1] text-sm">In Stock</span>
-            </div>
-
-            <div className="text-xl md:text-2xl mt-5">
-              <span className="text-primary font-semibold">Rs. 53,760</span>
-            </div>
-
-            <div className="mt-4 text-sm md:text-base">
-              <p>
-                PlayStation 5 Controller Skin High quality vinyl with air <br />
-                channel adhesive for easy bubble free install & mess <br />
-                free removal Pressure sensitive.
-              </p>
-            </div>
-
-            <div className="border-b border-black w-full mt-7"></div>
-
-            <div className="mt-6">
-              <div className="flex items-center gap-3">
-                <h1 className="text-lg md:text-2xl">Colors:</h1>
-                <div className="relative">
-                  <div className="h-5 w-5 border-2 border-black rounded-full z-10 relative"></div>
-                  <div className="h-3 w-3 rounded-full absolute top-[4px] left-1 cursor-pointer bg-[#A0BCE0] z-0"></div>
-                </div>
-
-                <div className="h-5 w-5 bg-[#E07575] rounded-full cursor-pointer"></div>
-              </div>
-
-              <div className="flex mt-5 flex-wrap gap-2 items-center">
-                <h1 className="text-lg md:text-[25px]">Size:</h1>
-                <div className="flex gap-2 ml-2">
-                  {["XS", "S", "M", "L", "XL"].map((size) => (
-                    <div
-                      key={size}
-                      className="h-8 w-8 cursor-pointer text-center pt-[3px] border border-gray-600 rounded-sm hover:bg-primary hover:text-white hover:border-primary transition-all"
-                    >
-                      {size}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-10 flex flex-wrap items-center gap-4">
-                <div className="flex items-center border-2 border-gray-800 rounded-md overflow-hidden">
-                  <button
-                    onClick={decreaseQty}
-                    className="px-4 py-2 text-lg font-semibold hover:bg-primary hover:text-white transition rounded-l-md"
-                  >
-                    −
-                  </button>
-                  <span className="px-6 py-2 text-base font-medium">{quantity}</span>
-                  <button
-                    onClick={increaseQty}
-                    className="px-4 py-2 text-lg font-semibold hover:bg-primary hover:text-white transition rounded-r-md"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <button className="px-6 py-3 cursor-pointer rounded-lg border w-auto border-black font-semibold text-black hover:bg-primary hover:text-white hover:border-primary transition shadow-modern">
-                  Buy Now
-                </button>
-
-                <div className="relative hover:bg-primary hover:text-white cursor-pointer hover:border-primary transition-all rounded-md">
-                  <div className="h-12 w-12 border border-gray-500 rounded-md"></div>
-                  <img
-                    src="src/assets/img/heart.png"
-                    alt=""
-                    className="absolute top-3 left-2"
-                    width={30}
-                  />
-                </div>
-              </div>
-
-              <div className="h-auto mt-5 w-full border border-gray-400 rounded-t p-4">
-                <div className="flex items-start gap-4">
-                  <img src="src/assets/img/free-deli.png" alt="Free Delivery Icon" />
-                  <div>
-                    <h1 className="text-lg font-semibold">Free Delivery</h1>
-                    <p className="text-sm text-gray-600 hover:underline cursor-pointer">
-                      Enter your postal code for Delivery Availability
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="h-auto w-full border border-gray-400 rounded-t p-4">
-                <div className="flex items-start gap-4">
-                  <img src="src/assets/img/return.png" alt="Free Delivery Icon" />
-                  <div>
-                    <h1 className="text-lg font-semibold">Return Delivery</h1>
-                    <p className="text-sm text-gray-600">
-                      Free 30 Days Delivery Returns. Details
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="mt-10 mb-16">
+          <SectionHeader title={decodeURIComponent(categoryName || 'All Products')} />
         </div>
 
-        <div>
-          <div className="mt-32 mb-16">
-            <SectionHeader title="Related Item" />
+        {products.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-600 text-lg">No products found for {decodeURIComponent(categoryName || 'this category')}.</p>
           </div>
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {[
-              {
-                img: "wish-img7.png",
-                title: "HAVIT HV-G92 Gamepad",
-                price: "Rs. 33,600",
-                old: "Rs. 44,800",
-                reviews: "(88)"
-              },
-              {
-                img: "wish-img8.png",
-                title: "AK-900 Wired Keyboard",
-                price: "Rs. 268,800",
-                old: "Rs. 324,800",
-                reviews: "(75)"
-              },
-              {
-                img: "wish-img6.png",
-                title: "HAVIT HV-G92 Gamepad",
-                price: "Rs. 103,600",
-                old: "Rs. 112,000",
-                reviews: "(99)"
-              },
-              {
-                img: "wish-img3.png",
-                title: "RGB liquid CPU Cooler",
-                price: "Rs. 44,800",
-                old: "Rs. 47,600",
-                reviews: "(65)"
-              }
-            ].map(({ img, title, price, old, reviews }) => (
-              <div key={title}>
-                <img src={`src/assets/img/${img}`} alt="" />
-                <h1 className="mt-2 font-semibold">{title}</h1>
-                <div className="flex gap-4 mt-2">
-                  <span className="text-primary font-semibold">{price}</span>
-                  <span className="line-through text-[#808080]">{old}</span>
-                </div>
-                <div className="flex items-center gap-1 mt-3">
-                  {Array(5).fill().map((_, i) => (
-                    <img key={i} src="src/assets/img/star.png" alt="Star" />
-                  ))}
-                  <span className="ml-1 text-sm text-gray-500">{reviews}</span>
+            {products.map((product) => (
+              <div key={product.id} className="group relative shadow-modern rounded-lg overflow-hidden">
+                <img
+                  src={product.image || "/src/assets/img/placeholder.png"}
+                  alt={product.name}
+                  className="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedProduct(product)}
+                  onError={(e) => {
+                    e.target.src = "/src/assets/img/placeholder.png"; // Fallback image
+                  }}
+                />
+                <div className="p-4">
+                  <h1 className="font-semibold text-lg line-clamp-2">{product.name}</h1>
+                  <p className="text-primary font-semibold text-xl mt-2">
+                    {product.priceFormatted || `Rs. ${product.price?.toLocaleString('en-PK')}`}
+                  </p>
+                  {/* Add to Cart button */}
+                  <button 
+                    className="mt-4 w-full bg-primary text-white py-2 rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleAddToCart(product.id)}
+                    disabled={addingToCart[product.id]}
+                  >
+                    {addingToCart[product.id] ? 'Adding...' : 'Add to Cart'}
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        )}
       </section>
-      <Footer />
+      {/* Toast Notification */}
+      {showToast && (
+        <div
+          className={`fixed bottom-5 right-5 p-4 rounded-lg shadow-lg text-white z-50
+            ${toastType === "success" ? "bg-green-500" : "bg-red-500"}`}
+        >
+          {toastMessage}
+        </div>
+      )}
+
+      {/* Product Details Modal */}
+      {selectedProduct && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          onClick={() => {
+            setSelectedProduct(null);
+            setSelectedSize(null);
+            setSelectedColor(null);
+          }}
+        >
+          <div 
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold">{selectedProduct.name}</h2>
+                <button
+                  onClick={() => {
+                    setSelectedProduct(null);
+                    setSelectedSize(null);
+                    setSelectedColor(null);
+                  }}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <img
+                    src={selectedProduct.image || "/src/assets/img/placeholder.png"}
+                    alt={selectedProduct.name}
+                    className="w-full h-96 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.target.src = "/src/assets/img/placeholder.png";
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <p className="text-gray-600 mb-4">{selectedProduct.description}</p>
+                  
+                  <div className="mb-4">
+                    <p className="text-3xl font-bold text-primary">
+                      {selectedProduct.priceFormatted || `Rs. ${selectedProduct.price?.toLocaleString('en-PK')}`}
+                    </p>
+                  </div>
+
+                  {selectedProduct.rating && (
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i} className={i < selectedProduct.rating ? "text-yellow-400" : "text-gray-300"}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      {selectedProduct.reviews && (
+                        <span className="text-gray-600">({selectedProduct.reviews} reviews)</span>
+                      )}
+                    </div>
+                  )}
+
+                  {selectedProduct.stock !== undefined && (
+                    <p className={`mb-4 ${selectedProduct.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {selectedProduct.stock > 0 ? `In Stock (${selectedProduct.stock} available)` : 'Out of Stock'}
+                    </p>
+                  )}
+
+                  {selectedProduct.sizes && (
+                    <div className="mb-4">
+                      <p className="font-semibold mb-2">Sizes:</p>
+                      <div className="flex gap-2">
+                        {selectedProduct.sizes.map((size) => (
+                          <button
+                            key={size}
+                            onClick={() => setSelectedSize(size)}
+                            className={`px-4 py-2 border-2 rounded transition ${
+                              selectedSize === size
+                                ? 'border-primary bg-primary text-white'
+                                : 'border-gray-300 hover:border-primary hover:bg-primary hover:text-white'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                      {selectedSize && (
+                        <p className="text-sm text-gray-600 mt-2">Selected: {selectedSize}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {selectedProduct.colors && (
+                    <div className="mb-4">
+                      <p className="font-semibold mb-2">Colors:</p>
+                      <div className="flex gap-2">
+                        {selectedProduct.colors.map((color) => {
+                          const colorMap = {
+                            'black': '#000000',
+                            'red': '#FF0000',
+                            'blue': '#0000FF',
+                            'white': '#FFFFFF',
+                            'pink': '#FFC0CB',
+                            'green': '#008000',
+                            'yellow': '#FFFF00',
+                            'brown': '#A52A2A',
+                            'gray': '#808080',
+                            'navy blue': '#000080'
+                          };
+                          const colorValue = colorMap[color.toLowerCase()] || color.toLowerCase();
+                          return (
+                            <div
+                              key={color}
+                              onClick={() => setSelectedColor(color)}
+                              className={`w-12 h-12 rounded-full border-3 cursor-pointer transition-all ${
+                                selectedColor === color
+                                  ? 'border-primary border-4 scale-110'
+                                  : 'border-gray-300 border-2 hover:border-primary hover:scale-105'
+                              }`}
+                              style={{ backgroundColor: colorValue }}
+                              title={color}
+                            />
+                          );
+                        })}
+                      </div>
+                      {selectedColor && (
+                        <p className="text-sm text-gray-600 mt-2">Selected: {selectedColor}</p>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    className="w-full bg-primary text-white py-3 rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                    onClick={() => {
+                      if (selectedProduct.sizes && !selectedSize) {
+                        alert('Please select a size');
+                        return;
+                      }
+                      if (selectedProduct.colors && !selectedColor) {
+                        alert('Please select a color');
+                        return;
+                      }
+                      handleAddToCart(selectedProduct.id);
+                      // Don't close modal immediately - let redirect happen
+                    }}
+                    disabled={addingToCart[selectedProduct.id] || (selectedProduct.stock !== undefined && selectedProduct.stock === 0)}
+                  >
+                    {addingToCart[selectedProduct.id] ? 'Adding...' : 'Add to Cart'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

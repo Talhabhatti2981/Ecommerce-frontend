@@ -1,73 +1,129 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 import "swiper/css";
 import "swiper/css/navigation";
-import SectionHeader from "./common/SectionHeader";
 
-const categories = [
-  { img: "src/assets/img/phone.png", title: "Phones" },
-  { img: "src/assets/img/computer.png", title: "Computers" },
-  { img: "src/assets/img/watch.png", title: "Watches" },
-  { img: "src/assets/img/camera.png", title: "Camera" },
-  { img: "src/assets/img/head-phone.png", title: "HeadPhone" },
-  { img: "src/assets/img/gamepad.png", title: "Gaming" },
+import SectionHeader from "./common/SectionHeader";
+import api from "../utils/api"; // Import your API utility
+
+// Placeholder icons for categories - these will be chosen more smartly later or from API
+const categoryIcons = {
+  "Women's Clothes": "👜",
+  "Men's Fashion": "👕",
+  "Electronics": "📱",
+  "Health": "❤️",
+  "Toys": "🧸",
+  "Beauty & Care": "💄", // Added based on your hardcoded list
+  "Home & Living": "🛋️", // Added based on your hardcoded list
+  // Add more as needed
+};
+
+// Placeholder backgrounds for categories
+const categoryBackgrounds = [
+  "bg-pink-200",
+  "bg-red-200",
+  "bg-orange-200",
+  "bg-yellow-200",
+  "bg-green-200",
+  "bg-blue-200",
+  "bg-indigo-200",
+  "bg-purple-200",
 ];
 
-const leftArrow = "src/assets/img/left.png";
-const rightArrow = "src/assets/img/right.png";
-
 const Category = () => {
-  return (
-    <section className="mb-24 shadow-md py-12 px-4 sm:px-6 md:px-20">
-      <div>
-        <SectionHeader title="Category" subtitle="Browse By Category" />
-        <div className="flex justify-end mt-6 gap-2">
-          <img
-            src={leftArrow}
-            alt="Previous"
-            className="custom-prev cursor-pointer rounded-full p-3 bg-[#f5f5f5] z-20 hover:bg-gray-300"
-          />
-          <img
-            src={rightArrow}
-            alt="Next"
-            className="custom-next cursor-pointer rounded-full p-3 bg-[#f5f5f5] z-20 hover:bg-gray-300"
-          />
-        </div>
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-        {/* Swiper */}
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.categories.getAll();
+        setCategories(res.data || []);
+      } catch (e) {
+        console.error("Error fetching categories for Explore More:", e);
+        setError("Could not load categories. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/products/${encodeURIComponent(categoryName)}`);
+  };
+
+  if (loading) {
+    return (
+      <section className="mb-24 py-12 px-4 sm:px-6 md:px-20">
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-2"></div>
+          <p className="text-gray-600">Loading categories...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mb-24 py-12 px-4 sm:px-6 md:px-20">
+        <div className="text-center py-10">
+          <p className="text-red-500 text-lg">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark"
+          >
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mb-24 py-12 px-4 sm:px-6 md:px-20">
+      <SectionHeader title="Explore More" subtitle="" />
+
+      {categories.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-gray-600 text-lg">No categories available at the moment.</p>
+        </div>
+      ) : (
         <Swiper
-          className="mt-6"
           modules={[Navigation]}
-          spaceBetween={15}
-          slidesPerView={5}
-          navigation={{
-            prevEl: ".custom-prev",
-            nextEl: ".custom-next",
-          }}
+          spaceBetween={20}
+          slidesPerView={4}
+          navigation
           breakpoints={{
             320: { slidesPerView: 2 },
             480: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
+            640: { slidesPerView: 4 },
+            768: { slidesPerView: 5 },
+            1024: { slidesPerView: 6 },
           }}
         >
           {categories.map((category, index) => (
-            <SwiperSlide key={index}>
-              <div className="border border-gray-300 w-full h-36 flex flex-col items-center justify-start p-4 group hover:bg-primary cursor-pointer transition duration-300 rounded-lg shadow-modern hover:shadow-modern-lg">
-                <img
-                  src={category.img}
-                  alt={category.title}
-                  className="w-16 h-16 group-hover:filter group-hover:brightness-0 group-hover:invert transition duration-300"
-                />
-                <h1 className="pt-4 text-black group-hover:text-white text-center text-sm sm:text-base">
-                  {category.title}
-                </h1>
+            <SwiperSlide key={category.id}>
+              <div className="flex flex-col items-center">
+                <div
+                  className={`w-20 h-20 rounded-xl flex items-center justify-center text-3xl
+                    ${categoryBackgrounds[index % categoryBackgrounds.length]} // Cycle through backgrounds
+                    hover:scale-105 transition-transform cursor-pointer`}
+                  onClick={() => handleCategoryClick(category.name)}
+                >
+                  {categoryIcons[category.name] || "📦"} {/* Use specific icon or a fallback */}
+                </div>
+                <p className="mt-2 text-center text-sm font-medium">{category.name}</p>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
+      )}
     </section>
   );
 };

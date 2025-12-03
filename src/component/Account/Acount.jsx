@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Footer from "../Footer";
 
 const Account = () => {
   return (
@@ -38,7 +37,19 @@ const Account = () => {
             </div>
 
             <div>
-              <h1 className="font-semibold text-lg">My Wishlist</h1>
+              <h1 className="font-semibold text-lg mb-4">Dashboards</h1>
+              <ul className="space-y-3 text-gray-500">
+                <li>
+                  <Link to="/admin" className="cursor-pointer hover:text-red-500">
+                    Admin Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/seller" className="cursor-pointer hover:text-red-500">
+                    Seller Dashboard
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -123,8 +134,6 @@ const Account = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 };

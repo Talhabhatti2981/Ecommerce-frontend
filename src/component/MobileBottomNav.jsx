@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaThList, FaHeart, FaUser } from "react-icons/fa";
+import { FaHome, FaThList, FaUser } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 
 const MobileBottomNav = () => {
@@ -28,11 +28,6 @@ const MobileBottomNav = () => {
           <IoCartOutline className="text-2xl" />
           <span className="absolute -top-1 -right-3 bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">2</span>
           <span className="text-xs mt-1">Cart</span>
-        </Link>
-
-        <Link to="/wishlist" className="flex flex-col items-center text-gray-700 hover:text-primary">
-          <FaHeart className="text-xl" />
-          <span className="text-xs mt-1">Wishlist</span>
         </Link>
 
         <Link to="/Account" className="flex flex-col items-center text-gray-700 hover:text-primary">

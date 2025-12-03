@@ -1,4 +1,3 @@
-import Footer from "../Footer";
 import Navbar from "../Navbar";
 import { Link } from "react-router-dom";
 import SectionHeader from "../common/SectionHeader";
@@ -328,7 +327,6 @@ const Wishlist = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </>
   );
 };

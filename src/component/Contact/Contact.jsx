@@ -2,8 +2,6 @@
 import { Link } from "react-router-dom";
 
 // Components
-import Home from "../home";
-import Footer from "../Footer";
 
 // Icons
 import { FiPhone } from "react-icons/fi";
@@ -113,8 +111,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 };
